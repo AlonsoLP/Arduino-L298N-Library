@@ -3,11 +3,9 @@
 ##An object-oriented class library to control L298N in Arduino
 
 When I received a L298N Dual H-Bridge I started using Yohendry
-library. It worked fine from the beginning. But there are some
-lacks like no brake, no direction correction, no turn ratio...
-The L298N library fixes these lacks and adds new features.
-
-#####Based on Yohendry Hurtado L298N library: https://github.com/yohendry/arduino_L298N
+library and it worked fine from the beginning. But there are some
+lacks like no brake, no direction correction, no backward driving,
+no turn ratio... The L298N library fixes these lacks.
 
 ### What is a L298N Module?
 Double H driver module uses ST L298N dual full-bridge driver.

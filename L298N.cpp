@@ -34,13 +34,12 @@ L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, ui
   IN4 = in4;
 
   INVERT = invert;
-
-  if (minspeed > 0) MINSPEED = byte(minspeed);
+  MINSPEED = minspeed;
 }
 
 
 // ---------------------------------------------------------------------------
-// L298N Public Methods
+// L298N Complex Method
 // ---------------------------------------------------------------------------
 
 void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_ratio = 0, int delay_time = 0)
@@ -55,6 +54,7 @@ void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_rati
     // MINSPEED <= speed_master <= MAXSPEED (255) || 255 if BRAKE
     if (direction != BRAKE)
       master = speed < MINSPEED ? MINSPEED : speed;
+
     // 0 <= speed_slave <= speed*slave_ratio/100 || speed_slave=speed if slave_ratio==100
     if (direction != STOP)
       slave = slave_ratio==100 ? speed : (speed<=MINSPEED ? 0 : speed*slave_ratio/100);
@@ -71,8 +71,32 @@ void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_rati
   }
 }
 
+
+// ---------------------------------------------------------------------------
+// L298N Simple Methods
+// ---------------------------------------------------------------------------
+
 void L298N::stop(boolean brake = false, int delay_time = 100)
 {
   this->drive(brake ? BRAKE : STOP, 0, 0, delay_time);
 }
 
+void L298N::forward(uint8_t speed = 255, int delay_time = 0)
+{
+  this->drive(FORWARD, speed, 100, delay_time);
+}
+
+void L298N::backward(uint8_t speed = 255, int delay_time = 0)
+{
+  this->drive(BACKWARD, speed, 100, delay_time);
+}
+
+void L298N::left(uint8_t speed = 255, int delay_time = 200)
+{
+  this->drive(LEFT, speed, 100, delay_time);
+}
+
+void L298N::right(uint8_t speed = 255, int delay_time = 200)
+{
+  this->drive(RIGHT, speed, 100, delay_time);
+}

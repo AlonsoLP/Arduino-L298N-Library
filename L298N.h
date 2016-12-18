@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Arduino L298N Library - v1.1 - 12/18/2016
+// Arduino L298N Library - v1.2 - 12/18/2016
 //
 // AUTHOR/LICENSE:
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
@@ -19,28 +19,35 @@
 // library fixes these lacks.
 //
 // FEATURES:
+// * Simple methods for basic tasks and a complex method for full custom.
 // * Stops vehicle with/without brakes.
 // * Trajectory correction and turn ratio, giving custom speed to each motor
 //   independently. It can be used backward and forward (v1.1).
 //
 // CONSTRUCTOR:
 //   L298N driver(ena, in1, in2, in3, in4, enb [, invert][, minspeed]);
-//     ena      - Enable/Disable (speed) MOTOR_A (must be a PWM pin)
-//     in1/2    - Controls MOTOR_A
-//     in3/4    - Controls MOTOR_B
-//     enb      - Enable/Disable (speed) MOTOR_B (must be a PWM pin)
-//     invert   - [Optional] Change direction solution (Left<->Right)
+//     ena      - Enable/Disable and regulates MOTOR_A speed (must be a PWM pin).
+//     in1/2    - Controls MOTOR_A.
+//     in3/4    - Controls MOTOR_B.
+//     enb      - Enable/Disable and regulates MOTOR_B speed (must be a PWM pin).
+//     invert   - [Optional] Change direction solution (Left<->Right).
 //     minspeed - [Optional] Minimum speed motors can handle before stop.
 //
 // METHODS:
-//   driver.drive([direction][, speed][, slave_percent][, delay_time])
-//     Send an order to motors. If no direction given, go strait ahead.
-//     slave_percent (0-100) works only on FORWARD_L, FORWARD_R, BACKWARD_L
-//     and BACKWARD_R. It defines the slave motor speed.
-//     E.g.: speed=150 slave_percent=50 => slave_speed=75
-//     (*) See DIRECTIONS section for valid orders)
-//   driver.stop([brake][, delay_time]) - Stop vehicle (using brakes if
-//     brake is true) and waits delay_time before brakes are released.
+//   COMPLEX:
+//     driver.drive([direction][, speed][, slave_percent][, delay_time])
+//       Send an order to motors. If no direction given, go strait ahead.
+//       slave_percent (0-100) works only on FORWARD_L, FORWARD_R, BACKWARD_L
+//       and BACKWARD_R. It defines the slave motor speed.
+//         E.g.: speed=150 slave_percent=50 => slave_speed=75
+//       (*) See DIRECTIONS section for valid orders.
+//   SIMPLE:
+//     driver.stop([brake][, delay_time]) - Stop vehicle (using brakes if true)
+//       and waits delay_time.
+//     driver.forward([speed][, delay_time]) - Move forward and waits delay_time.
+//     driver.backward([speed][, delay_time]) - Move backward and waits delay_time.
+//     driver.left([speed][, delay_time]) - Rotate left and waits delay_time.
+//     driver.right([speed][, delay_time]) - Rotate right and waits delay_time.
 //
 // DIRECTIONS:
 //   FORWARD     250  11111010  (master - master)
@@ -55,7 +62,7 @@
 //   BRAKE       255  11111111
 //                    ABTT1234  ENA ENB TYPEA TYPEB IN1 IN2 IN3 IN4
 // (*)   TYPE = 1 master - 0 slave
-// (**)  Masters works at speed provided, slave at percent (lower) speed. 
+// (**)  Masters works at speed provided, slave at percent (lower) speed.
 // (***) inv = inverted, ENA/ENB = PWM speed if 1
 //
 // TROUBLESHOOTING:
@@ -66,15 +73,16 @@
 //   on most Arduino boards; 2-13 and 44-46 on Arduino Mega.
 //
 // HISTORY:
+// 12/19/2016 v1.2 - Added simple methods for basic orders (easy reading code).
+//   Fixed *no need check* in constructor. Cosmetic fixes.
+//
 // 12/18/2016 v1.1 - Code rewrited. Simplified method list. Direction variables
-//   reflects bits used to configure motors, no need to code it separarely. You
-//   can now turn backward with the new method. Added invert to constructor to
-//   avoid motor wire exchange when left is right and vice versa.
+//   reflects bits used to configure motors, no need to code it separately. You
+//   can turn backward. Added invert to constructor to avoid motor wire exchange
+//   when left is right and vice versa.
 //
 // 12/16/2016 v1.0 - Initial release.
 // ---------------------------------------------------------------------------
-/*
-*/
 
 #ifndef L298N_h
 #define L298N_h
@@ -94,10 +102,16 @@ class L298N
                   LEFT = 246, \
                   STOP = 0, \
                   BRAKE = 255;
+    // constructor
     L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, uint8_t enb, boolean invert = false, uint8_t minspeed = 0);
+    // complex method (all orders)
     void drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_percent = 0, int delay_time = 0);
+    // simple methods (basic orders)
     void stop(boolean brake = false, int delay_time = 100);
+    void forward(uint8_t speed = 255, int delay_time = 0);
+    void backward(uint8_t speed = 255, int delay_time = 0);
+    void left(uint8_t speed = 255, int delay_time = 200);
+    void right(uint8_t speed = 255, int delay_time = 200);
 };
 
 #endif
-

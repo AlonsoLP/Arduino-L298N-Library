@@ -7,9 +7,16 @@ library and it worked fine from the beginning. But there are some
 lacks like no brake, no direction correction, no backward driving,
 no turn ratio... The L298N library fixes these lacks.
 
-### What is a L298N Module?
+##[Wiki](https://github.com/AlonsoLP/Arduino-L298N-Library/wikihttps://github.com/AlonsoLP/Arduino-L298N-Library/wiki)
+
+You can find all information in the project's wiki. If you think
+there's something missing/wrong, you are invited to add/fix it.
+
+#####(All below will go to Wiki soon)
+
+### What's a L298N Module?
 Double H driver module uses ST L298N dual full-bridge driver.
-It is a high voltage, high current dual full-bridge driver
+It's a high voltage, high current dual full-bridge driver
 designed to accept standard TTL logic levels and drive
 inductive loads (relays, solenoids, DC and stepping
 motors).

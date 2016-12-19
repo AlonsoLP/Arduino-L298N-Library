@@ -7,7 +7,7 @@ library and it worked fine from the beginning. But there are some
 lacks like no brake, no direction correction, no backward driving,
 no turn ratio... The L298N library fixes these lacks.
 
-##[Wiki](https://github.com/AlonsoLP/Arduino-L298N-Library/wikihttps://github.com/AlonsoLP/Arduino-L298N-Library/wiki)
+##[Wiki](https://github.com/AlonsoLP/Arduino-L298N-Library/wiki)
 
 You can find all information in the project's wiki. If you think
 there's something missing/wrong, you are invited to add/fix it.

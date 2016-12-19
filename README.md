@@ -11,3 +11,8 @@ no turn ratio... The L298N library fixes these lacks.
 
 You can find all information in the project's wiki. If you think
 there's something missing/wrong, you are invited to add/fix it.
+
+###To-Do
+
+- Motor acceleration (inc/decrease speed gradually)
+- Intelligent orders change (avoid BACKWARD FULLSPEED after FORWARD FULLSPED directly)

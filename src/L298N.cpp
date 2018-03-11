@@ -42,7 +42,7 @@ L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, ui
 // L298N Complex Method
 // ---------------------------------------------------------------------------
 
-void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_ratio = 0, int delay_time = 0)
+void L298N::drive(uint8_t direction=0, uint8_t speed=255, uint8_t slave_ratio=0, int delay_time=0)
 {
   if ( direction==FORWARD  || direction==FORWARD_R  || direction==FORWARD_L  || \
        direction==BACKWARD || direction==BACKWARD_R || direction==BACKWARD_L || \
@@ -51,21 +51,21 @@ void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_rati
   {
     uint8_t master = 255, slave = 0;
 
-    // MINSPEED <= speed_master <= MAXSPEED (255) || 255 if BRAKE
+    // MINSPEED <= speed_master <= MAXSPEED (255) || 255 (if BRAKE)
     if (direction != BRAKE)
-      master = speed < MINSPEED ? MINSPEED : speed;
+      master = speed < MINSPEED?MINSPEED:speed;
 
-    // 0 <= speed_slave <= speed*slave_ratio/100 || speed_slave=speed if slave_ratio==100
+    // 0 <= speed_slave <= (speed*slave_ratio/100) || speed_slave=speed (if slave_ratio==100)
     if (direction != STOP)
-      slave = slave_ratio==100 ? speed : (speed<=MINSPEED ? 0 : speed*slave_ratio/100);
+      slave = (slave_ratio==100)?speed:(speed <= MINSPEED?0:(speed*slave_ratio/100));
 
     digitalWrite(IN1, bitRead(direction, INVERT?1:3));
     digitalWrite(IN2, bitRead(direction, INVERT?0:2));
     digitalWrite(IN3, bitRead(direction, INVERT?3:1));
     digitalWrite(IN4, bitRead(direction, INVERT?2:0));
 
-    analogWrite(ENA, bitRead(direction, INVERT?4:5) ? master : slave);
-    analogWrite(ENB, bitRead(direction, INVERT?5:4) ? master : slave);
+    analogWrite(ENA, bitRead(direction, INVERT?4:5)?master:slave);
+    analogWrite(ENB, bitRead(direction, INVERT?5:4)?master:slave);
 
     delay(delay_time);
   }
@@ -76,27 +76,27 @@ void L298N::drive(uint8_t direction = 0, uint8_t speed = 255, uint8_t slave_rati
 // L298N Simple Methods
 // ---------------------------------------------------------------------------
 
-void L298N::stop(boolean brake = false, int delay_time = 100)
+void L298N::stop(boolean brake=false, int delay_time=100)
 {
-  this->drive(brake ? BRAKE : STOP, 0, 0, delay_time);
+  this->drive(brake?BRAKE:STOP, 0, 0, delay_time);
 }
 
-void L298N::forward(uint8_t speed = 255, int delay_time = 0)
+void L298N::forward(uint8_t speed=255, int delay_time=0)
 {
   this->drive(FORWARD, speed, 100, delay_time);
 }
 
-void L298N::backward(uint8_t speed = 255, int delay_time = 0)
+void L298N::backward(uint8_t speed=255, int delay_time=0)
 {
   this->drive(BACKWARD, speed, 100, delay_time);
 }
 
-void L298N::left(uint8_t speed = 255, int delay_time = 200)
+void L298N::left(uint8_t speed=255, int delay_time=200)
 {
   this->drive(LEFT, speed, 100, delay_time);
 }
 
-void L298N::right(uint8_t speed = 255, int delay_time = 200)
+void L298N::right(uint8_t speed=255, int delay_time=200)
 {
   this->drive(RIGHT, speed, 100, delay_time);
 }

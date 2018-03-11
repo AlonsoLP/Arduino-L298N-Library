@@ -16,7 +16,7 @@ uint8_t MINSPEED = 0;
 // L298N constructor
 // ---------------------------------------------------------------------------
 
-L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, uint8_t enb, boolean invert = false, uint8_t minspeed = 0)
+L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, uint8_t enb, boolean invert=false, uint8_t minspeed=0)
 {
   pinMode (ena, OUTPUT);
   pinMode (in1, OUTPUT);

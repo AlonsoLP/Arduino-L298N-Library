@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
 // Copyright 2016 License: GNU GPL v3 http://www.gnu.org/licenses/gpl.html
-// Version: 1.3
+// Version: 1.4
 // See "L298N.h" for purpose, syntax, version history, links, and more.
 // ---------------------------------------------------------------------------
 
@@ -31,6 +31,7 @@ L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, ui
 
   _invert = invert;
   _minspeed = minspeed;
+  _lastDirection = STOP;
 }
 
 // ---------------------------------------------------------------------------
@@ -45,6 +46,13 @@ void L298N::drive(uint8_t direction, uint8_t speed, uint8_t slave_ratio, int del
       direction == RIGHT    || direction == LEFT       || \
       direction == STOP     || direction == BRAKE)
   {
+    // Intelligent hardware protection
+    if (_lastDirection != STOP && _lastDirection != BRAKE && direction != STOP && direction != BRAKE && _lastDirection != direction) 
+    {
+      this->stop(false, 100); 
+    }
+
+    _lastDirection = direction;
     uint8_t master = 255;
     uint8_t slave = 0;
 

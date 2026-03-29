@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Arduino L298N Library (v1.22)
+// Arduino L298N Library (v1.3)
 //
 // AUTHOR/LICENSE:
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
@@ -75,8 +75,9 @@
 //   on most Arduino boards; 2-13 and 44-46 on Arduino Mega.
 //
 // HISTORY:
-// 03/29/2026 v1.22 - Encapsulated global variables into class members and fixed default parameters.
-// 03/11/2018 v1.21 - Cosmetic fixes.
+// 03/29/2026 v1.3 - Added smooth transition method.
+// 03/29/2026 v1.2.2 - Encapsulated global variables into class members and fixed default parameters.
+// 03/11/2018 v1.2.1 - Cosmetic fixes.
 // 12/19/2016 v1.2 - Added simple methods for basic orders (easy reading code).
 //   Fixed *no need check* in constructor. Cosmetic fixes.
 // 12/18/2016 v1.1 - Code rewritten. Simplified method list. Direction variables
@@ -118,6 +119,9 @@ class L298N
     void backward(uint8_t speed = 255, int delay_time = 0);
     void left(uint8_t speed = 255, int delay_time = 200);
     void right(uint8_t speed = 255, int delay_time = 200);
+
+    // Smooth transition method (Simplified Acceleration/Deceleration)
+    void smoothDrive(uint8_t direction = 0, uint8_t start_speed = 0, uint8_t end_speed = 255, int step_delay = 5);
 
   private:
     // Encapsulated pin definitions and configuration to allow multiple class instances

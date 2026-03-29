@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Arduino L298N Library (v1.3)
+// Arduino L298N Library (v1.4)
 //
 // AUTHOR/LICENSE:
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
@@ -75,6 +75,7 @@
 //   on most Arduino boards; 2-13 and 44-46 on Arduino Mega.
 //
 // HISTORY:
+// 03/30/2026 v1.4 - Intelligent hardware protection.
 // 03/29/2026 v1.3 - Added smooth transition method.
 // 03/29/2026 v1.2.2 - Encapsulated global variables into class members and fixed default parameters.
 // 03/11/2018 v1.2.1 - Cosmetic fixes.

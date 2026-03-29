@@ -1,102 +1,103 @@
 // ---------------------------------------------------------------------------
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
 // Copyright 2016 License: GNU GPL v3 http://www.gnu.org/licenses/gpl.html
-//
+// Version: 1.22
 // See "L298N.h" for purpose, syntax, version history, links, and more.
 // ---------------------------------------------------------------------------
 
 #include "L298N.h"
 
-uint8_t ENA, ENB, IN1, IN2, IN3, IN4;
-boolean INVERT = false;
-uint8_t MINSPEED = 0;
-
-
 // ---------------------------------------------------------------------------
-// L298N constructor
+// L298N Constructor
 // ---------------------------------------------------------------------------
 
-L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, uint8_t enb, boolean invert=false, uint8_t minspeed=0)
+// Note: Default arguments must only be specified in the header file (.h).
+L298N::L298N(uint8_t ena, uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4, uint8_t enb, boolean invert, uint8_t minspeed)
 {
-  pinMode (ena, OUTPUT);
-  pinMode (in1, OUTPUT);
-  pinMode (in2, OUTPUT);
-  pinMode (in3, OUTPUT);
-  pinMode (in4, OUTPUT);
-  pinMode (enb, OUTPUT);
+  pinMode(ena, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(enb, OUTPUT);
 
-  ENA = ena;
-  ENB = enb;
+  // Assign parameters to private class members
+  _ena = ena;
+  _enb = enb;
+  _in1 = in1;
+  _in2 = in2;
+  _in3 = in3;
+  _in4 = in4;
 
-  IN1 = in1;
-  IN2 = in2;
-  IN3 = in3;
-  IN4 = in4;
-
-  INVERT = invert;
-  MINSPEED = minspeed;
+  _invert = invert;
+  _minspeed = minspeed;
 }
-
 
 // ---------------------------------------------------------------------------
 // L298N Complex Method
 // ---------------------------------------------------------------------------
 
-void L298N::drive(uint8_t direction=0, uint8_t speed=255, uint8_t slave_ratio=0, int delay_time=0)
+void L298N::drive(uint8_t direction, uint8_t speed, uint8_t slave_ratio, int delay_time)
 {
-  if ( direction==FORWARD  || direction==FORWARD_R  || direction==FORWARD_L  || \
-       direction==BACKWARD || direction==BACKWARD_R || direction==BACKWARD_L || \
-       direction==RIGHT    || direction==LEFT       || \
-       direction==STOP     || direction==BRAKE )
+  // Verify if the provided direction matches a valid predefined state
+  if (direction == FORWARD  || direction == FORWARD_R  || direction == FORWARD_L  || \
+      direction == BACKWARD || direction == BACKWARD_R || direction == BACKWARD_L || \
+      direction == RIGHT    || direction == LEFT       || \
+      direction == STOP     || direction == BRAKE)
   {
-    uint8_t master = 255, slave = 0;
+    uint8_t master = 255;
+    uint8_t slave = 0;
 
-    // MINSPEED <= speed_master <= MAXSPEED (255) || 255 (if BRAKE)
-    if (direction != BRAKE)
-      master = speed < MINSPEED?MINSPEED:speed;
+    // Calculate the master motor speed, ensuring it meets the minimum speed requirement
+    if (direction != BRAKE) {
+      master = (speed < _minspeed) ? _minspeed : speed;
+    }
 
-    // 0 <= speed_slave <= (speed*slave_ratio/100) || speed_slave=speed (if slave_ratio==100)
-    if (direction != STOP)
-      slave = (slave_ratio==100)?speed:(speed <= MINSPEED?0:(speed*slave_ratio/100));
+    // Calculate the slave motor speed based on the provided percentage ratio
+    if (direction != STOP) {
+      slave = (slave_ratio == 100) ? speed : ((speed <= _minspeed) ? 0 : (speed * slave_ratio / 100));
+    }
 
-    digitalWrite(IN1, bitRead(direction, INVERT?1:3));
-    digitalWrite(IN2, bitRead(direction, INVERT?0:2));
-    digitalWrite(IN3, bitRead(direction, INVERT?3:1));
-    digitalWrite(IN4, bitRead(direction, INVERT?2:0));
+    // Write digital states to direction control pins based on the bitmask
+    digitalWrite(_in1, bitRead(direction, _invert ? 1 : 3));
+    digitalWrite(_in2, bitRead(direction, _invert ? 0 : 2));
+    digitalWrite(_in3, bitRead(direction, _invert ? 3 : 1));
+    digitalWrite(_in4, bitRead(direction, _invert ? 2 : 0));
 
-    analogWrite(ENA, bitRead(direction, INVERT?4:5)?master:slave);
-    analogWrite(ENB, bitRead(direction, INVERT?5:4)?master:slave);
+    // Write PWM signals to enable pins to control motor speed
+    analogWrite(_ena, bitRead(direction, _invert ? 4 : 5) ? master : slave);
+    analogWrite(_enb, bitRead(direction, _invert ? 5 : 4) ? master : slave);
 
+    // Pause execution to allow the motors to maintain the current state
     delay(delay_time);
   }
 }
-
 
 // ---------------------------------------------------------------------------
 // L298N Simple Methods
 // ---------------------------------------------------------------------------
 
-void L298N::stop(boolean brake=false, int delay_time=100)
+void L298N::stop(boolean brake, int delay_time)
 {
-  this->drive(brake?BRAKE:STOP, 0, 0, delay_time);
+  this->drive(brake ? BRAKE : STOP, 0, 0, delay_time);
 }
 
-void L298N::forward(uint8_t speed=255, int delay_time=0)
+void L298N::forward(uint8_t speed, int delay_time)
 {
   this->drive(FORWARD, speed, 100, delay_time);
 }
 
-void L298N::backward(uint8_t speed=255, int delay_time=0)
+void L298N::backward(uint8_t speed, int delay_time)
 {
   this->drive(BACKWARD, speed, 100, delay_time);
 }
 
-void L298N::left(uint8_t speed=255, int delay_time=200)
+void L298N::left(uint8_t speed, int delay_time)
 {
   this->drive(LEFT, speed, 100, delay_time);
 }
 
-void L298N::right(uint8_t speed=255, int delay_time=200)
+void L298N::right(uint8_t speed, int delay_time)
 {
   this->drive(RIGHT, speed, 100, delay_time);
 }

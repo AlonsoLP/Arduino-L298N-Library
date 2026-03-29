@@ -121,7 +121,7 @@ class L298N
     void right(uint8_t speed = 255, int delay_time = 200);
 
     // Smooth transition method (Acceleration/Deceleration)
-    void smoothDrive(uint8_t direction = 0, uint8_t start_speed = 0, uint8_t end_speed = 255, int step_delay = 5);
+    void smoothDrive(uint8_t direction, uint8_t start_speed = 0, uint8_t end_speed = 255, int step_delay = 5);
 
   private:
     // Encapsulated pin definitions and configuration to allow multiple class instances

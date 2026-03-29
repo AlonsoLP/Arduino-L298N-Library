@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Created by Alonso José Lara Plana - alonso.lara.plana@gmail.com
 // Copyright 2016 License: GNU GPL v3 http://www.gnu.org/licenses/gpl.html
-// Version: 1.22
+// Version: 1.3
 // See "L298N.h" for purpose, syntax, version history, links, and more.
 // ---------------------------------------------------------------------------
 
@@ -100,4 +100,34 @@ void L298N::left(uint8_t speed, int delay_time)
 void L298N::right(uint8_t speed, int delay_time)
 {
   this->drive(RIGHT, speed, 100, delay_time);
+}
+
+// ---------------------------------------------------------------------------
+// L298N Smooth Drive Method
+// ---------------------------------------------------------------------------
+
+void L298N::smoothDrive(uint8_t direction, uint8_t start_speed, uint8_t end_speed, int step_delay)
+{
+  // Accelerate: start speed is lower than target speed
+  if (start_speed < end_speed) 
+  {
+    for (int speed = start_speed; speed <= end_speed; speed++) 
+    {
+      this->drive(direction, speed, 100, step_delay);
+    }
+  } 
+  // Decelerate: start speed is higher than target speed
+  else if (start_speed > end_speed) 
+  {
+    for (int speed = start_speed; speed >= end_speed; speed--) 
+    {
+      this->drive(direction, speed, 100, step_delay);
+    }
+    
+    // Ensure the hardware is fully stopped if the target speed was zero
+    if (end_speed == 0) 
+    {
+      this->drive(STOP, 0, 0, 0); 
+    }
+  }
 }

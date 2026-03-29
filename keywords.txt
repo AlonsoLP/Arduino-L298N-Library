@@ -1,6 +1,7 @@
 L298N	KEYWORD1
 
 drive	KEYWORD2
+smoothDrive	KEYWORD2
 stop	KEYWORD2
 forward	KEYWORD2
 backward	KEYWORD2

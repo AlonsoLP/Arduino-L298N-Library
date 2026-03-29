@@ -134,6 +134,9 @@ class L298N
     
     boolean _invert;
     uint8_t _minspeed;
+
+    // Memory state for hardware protection
+    uint8_t _lastDirection;
 };
 
 #endif
